@@ -1,4 +1,4 @@
-package com.blank.chapter10
+package com.blank.chapter10.ui.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

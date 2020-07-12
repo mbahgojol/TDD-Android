@@ -2,6 +2,7 @@ package com.blank.chapter10
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.blank.chapter10.ui.main.MainViewModel
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +16,8 @@ class MainViewModelTest {
 
     @Before
     fun setup() {
-        viewmodel = MainViewModel(ApplicationProvider.getApplicationContext())
+        viewmodel =
+            MainViewModel(ApplicationProvider.getApplicationContext())
     }
 
     @Test
