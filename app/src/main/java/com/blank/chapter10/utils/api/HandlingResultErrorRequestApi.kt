@@ -6,7 +6,7 @@ import retrofit2.HttpException
 
 fun getResultStateError(error: Throwable): ResultState {
     return if (error is HttpException) {
-        when (error.code()) {
+        /*when (error.code()) {
             504 -> {
                 ResultState.NoConnection(
                     throwable = Throwable(
@@ -94,8 +94,20 @@ fun getResultStateError(error: Throwable): ResultState {
                     )
                 )
             }
-        }
+        }*/
 
+        val type = object : TypeToken<BaseErrorDataSourceApi>() {}.type
+        var errorResponse: BaseErrorDataSourceApi? = null
+        error.response()?.errorBody()?.let {
+            errorResponse =
+                Gson().fromJson(it.charStream(), type)
+
+        }
+        return ResultState.Error(
+            throwable = Throwable(
+                errorResponse?.errors ?: "Error"
+            )
+        )
     } else {
         return ResultState.Error(throwable = error)
     }
