@@ -14,6 +14,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,49 +34,35 @@ android {
         jvmTarget = "1.8"
     }
 }
-def RxJavaVersion = "2.1.3"
 
 dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    implementation multidexDependencies.values()
 
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation kotlinDependencies.values()
+    implementation appCompatDependencies.values()
+    implementation uiDependencies.values()
+    implementation jetpackDependencies.values()
+//    implementation googleServiceDependencies.values()
+    implementation legacySupportDependencies.values()
 
-    // unit testing
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    testImplementation 'org.mockito:mockito-core:2.23.4'
-    testImplementation "androidx.test.ext:junit-ktx:1.1.1"
-    testImplementation "androidx.test:core-ktx:1.2.0"
+    implementation retrofitDependencies.values()
+    implementation rxJavaAndroidDependencies.values()
+    implementation okHttpDependencies.values()
+    implementation daggerDependencies.values()
+    kapt daggerKaptDependencies.values()
+    implementation glideDependencies.values()
+    annotationProcessor glideDependencies.values()
+    implementation(mockitoDependencies.values()) {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+    }
+    testImplementation testDependencies.values()
+    androidTestImplementation androidTestDependencies.values()
+    testImplementation spekDependenciesTestImplementation.values()
 
-    // ui test/ instrumentation test
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    testImplementation "org.robolectric:robolectric:4.2.1"
+    testRuntimeOnly testRuntimeDependencies.values()
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
-
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-
-    implementation "androidx.room:room-runtime:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
-
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0"
-
-    // dialog
-    implementation 'com.github.d-max:spots-dialog:1.1@aar'
+    implementation dialogUIDependencies.values()
 
 }
