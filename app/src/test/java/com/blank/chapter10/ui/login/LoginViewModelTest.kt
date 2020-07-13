@@ -1,60 +1,102 @@
 package com.blank.chapter10.ui.login
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.data.model.BodyLogin
+import com.blank.chapter10.data.model.Data
 import com.blank.chapter10.data.model.ResponseLogin
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Spy
+import com.blank.chapter10.utils.api.BaseErrorDataSourceApi
+import com.blank.chapter10.utils.api.ResultState
+import com.edwinnrw.moviecleanarchitecture.helper.InstantRuleExecution
+import com.edwinnrw.moviecleanarchitecture.helper.TrampolineSchedulerRX
+import com.google.gson.Gson
+import com.jraska.livedata.test
+import com.nhaarman.mockito_kotlin.atLeastOnce
+import com.nhaarman.mockito_kotlin.given
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import io.reactivex.Single
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.gherkin.Feature
+import retrofit2.HttpException
+import retrofit2.Response
 
-class LoginViewModelTest {
+@RunWith(JUnitPlatform::class)
+class LoginViewModelTest : Spek({
+    Feature("Login") {
+        val appDataManager = mock<AppDataManager>()
+        val viewModel = LoginViewModel(appDataManager)
+        val observerLogin = mock<Observer<ResultState>>()
 
-    @Mock
-    private val appDataManager = mock(AppDataManager::class.java)
-
-    private lateinit var viewModel: LoginViewModel
-    @Mock
-    private lateinit var view: LoginNavigator
-    private lateinit var body: BodyLogin
-
-    @Spy
-    private var responseLiveData: MutableLiveData<ResponseLogin> = MutableLiveData()
-
-    @Before
-    fun setUp() {
-        view = mock(LoginNavigator::class.java)
-        viewModel = mock(LoginViewModel::class.java)
-        viewModel.navigator = view
-
-        body = BodyLogin(
-            "123123",
-            "kampreto@gmail.com"
+        val bodyLogin = BodyLogin(
+            email = "ghozimahdi@gmail.com",
+            password = "123123"
         )
-    }
 
-    @Test
-    fun login() {
-        /*`when`(
-            viewModel.login(
+        beforeFeature {
+            TrampolineSchedulerRX.start()
+            InstantRuleExecution.start()
+            viewModel.stateResponseLogin.observeForever(observerLogin)
+        }
 
+        Scenario("do on login, response success") {
+            val expectedResult =
+                ResponseLogin(Data("1", "ghozimahdi@gmail.com", "ghozimahdi", "token"), true)
+            var expectedResultState: ResultState
+
+            Given("set succes expected result state") {
+                expectedResultState = ResultState.Success(expectedResult, "")
+
+                given(appDataManager.login(bodyLogin)).willReturn(Single.just(expectedResultState))
+            }
+
+            When("request api login") {
+                viewModel.login(bodyLogin)
+            }
+
+            Then("result success and return data") {
+                verify(observerLogin, atLeastOnce()).onChanged(ResultState.Loading)
+                verify(observerLogin, atLeastOnce()).onChanged(
+                    ResultState.Success(
+                        expectedResult,
+                        ""
+                    )
+                )
+            }
+        }
+
+        Scenario("do on login, response error") {
+            val baseErrorDataSourceApi = BaseErrorDataSourceApi(false, "error")
+            val responseBody: Response<BaseErrorDataSourceApi> = Response.error(
+                422,
+                Gson().toJson(baseErrorDataSourceApi).toString().toResponseBody()
             )
-        ).thenReturn()*/
-        viewModel.login(body)
-        verify(viewModel).login(body)
-    }
+            val errorExpected = HttpException(responseBody)
 
-    @Test
-    fun `show loading when login`() {
-        viewModel.login(body)
-        verify(view).showLoading()
-    }
+            Given("set error expected result state") {
+                Mockito.`when`(appDataManager.login(bodyLogin))
+                    .thenReturn(Single.error(errorExpected))
+            }
 
-    @Test
-    fun `test livedata`() {
+            When("request api login") {
+                viewModel.login(bodyLogin)
+            }
 
+            Then("result error and return data") {
+                verify(observerLogin, atLeastOnce()).onChanged(ResultState.Loading)
+                viewModel.stateResponseLogin.test().assertValue {
+                    it is ResultState.Error
+                }
+            }
+        }
+
+        afterFeature {
+            TrampolineSchedulerRX.tearDown()
+            InstantRuleExecution.tearDown()
+        }
     }
-}
+})
