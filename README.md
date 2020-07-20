@@ -10,3 +10,4 @@ Example TDD (Test Drive Development) Android
 - Glide
 - Mockito
 - Spek Framework
+- Dagger Hilt

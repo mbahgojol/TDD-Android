@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 
 android {
@@ -46,12 +48,14 @@ dependencies {
     implementation jetpackDependencies.values()
 //    implementation googleServiceDependencies.values()
     implementation legacySupportDependencies.values()
+    implementation uiAndroidx.values()
 
     implementation retrofitDependencies.values()
     implementation rxJavaAndroidDependencies.values()
     implementation okHttpDependencies.values()
-    implementation daggerDependencies.values()
-    kapt daggerKaptDependencies.values()
+    implementation daggerHiltDependencies.values()
+    kapt daggerHiltKaptDependencies.values()
+
     implementation glideDependencies.values()
     annotationProcessor glideDependencies.values()
     implementation(mockitoDependencies.values()) {
@@ -64,5 +68,4 @@ dependencies {
     testRuntimeOnly testRuntimeDependencies.values()
 
     implementation dialogUIDependencies.values()
-
 }

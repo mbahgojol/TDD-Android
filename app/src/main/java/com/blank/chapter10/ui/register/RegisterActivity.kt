@@ -3,13 +3,10 @@ package com.blank.chapter10.ui.register
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.blank.chapter10.AppLoader
 import com.blank.chapter10.R
-import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.data.model.ResponseRegister
-import com.blank.chapter10.data.remote.AppApiHelper
 import com.blank.chapter10.utils.ambilText
 import com.blank.chapter10.utils.api.ResultState
 import com.blank.chapter10.utils.observe
@@ -18,8 +15,8 @@ import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
-    private lateinit var factory: RegisterViewModel.Factory
-    private lateinit var viewModel: RegisterViewModel
+    private val viewModel: RegisterViewModel by viewModels()
+
     private val dialog: AlertDialog by lazy {
         SpotsDialog.Builder().setContext(this).build()
     }
@@ -28,10 +25,6 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val appApiHelper = AppApiHelper(AppLoader.service())
-        val appDataManager = AppDataManager(appApiHelper)
-        factory = RegisterViewModel.Factory(appDataManager)
-        viewModel = ViewModelProvider(this, factory).get(RegisterViewModel::class.java)
         observe(viewModel.resultStateResponseRegister, this::manageResponseRegister)
 
         btnRegister.setOnClickListener {

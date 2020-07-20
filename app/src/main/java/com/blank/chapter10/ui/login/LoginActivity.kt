@@ -3,23 +3,22 @@ package com.blank.chapter10.ui.login
 import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.blank.chapter10.AppLoader
 import com.blank.chapter10.R
-import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.data.model.BodyLogin
 import com.blank.chapter10.data.model.ResponseLogin
-import com.blank.chapter10.data.remote.AppApiHelper
 import com.blank.chapter10.utils.ambilText
 import com.blank.chapter10.utils.api.ResultState
 import com.blank.chapter10.utils.observe
+import dagger.hilt.android.AndroidEntryPoint
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_login.*
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-    private lateinit var factory: LoginViewModel.Factory
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
+
     private val dialog: AlertDialog by lazy {
         SpotsDialog.Builder().setContext(this).build()
     }
@@ -28,10 +27,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val appApiHelper = AppApiHelper(AppLoader.service())
-        val appDataManager = AppDataManager(appApiHelper)
-        factory = LoginViewModel.Factory(appDataManager)
-        viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
         observe(viewModel.stateResponseLogin, this::manageResponseLogin)
 
         btnLogin.setOnClickListener {

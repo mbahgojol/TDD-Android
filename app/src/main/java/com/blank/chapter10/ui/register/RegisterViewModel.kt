@@ -1,15 +1,21 @@
 package com.blank.chapter10.ui.register
 
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.utils.api.ResultState
 import com.blank.chapter10.utils.api.getResultStateError
 import com.blank.teamb_ex.BodyRegister
 import io.reactivex.disposables.CompositeDisposable
 
-class RegisterViewModel(private val appDataManager: AppDataManager) : ViewModel() {
+class RegisterViewModel @ViewModelInject constructor(
+    private val appDataManager: AppDataManager,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) :
+    ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     val resultStateResponseRegister = MutableLiveData<ResultState>()
 
@@ -25,13 +31,6 @@ class RegisterViewModel(private val appDataManager: AppDataManager) : ViewModel(
                     resultStateResponseRegister.postValue(getResultStateError(it))
                 })
         )
-    }
-
-    class Factory(private val appDataManager: AppDataManager) :
-        ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return RegisterViewModel(appDataManager) as T
-        }
     }
 
     override fun onCleared() {
