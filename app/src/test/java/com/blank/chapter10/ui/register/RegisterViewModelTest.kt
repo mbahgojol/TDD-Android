@@ -1,6 +1,7 @@
 package com.blank.chapter10.ui.register
 
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.data.model.DataRegister
 import com.blank.chapter10.data.model.ResponseRegister
@@ -29,7 +30,8 @@ import retrofit2.Response
 class RegisterViewModelTest : Spek({
     Feature("Register") {
         val appDataManager = mock<AppDataManager>()
-        val viewModel = RegisterViewModel(appDataManager)
+        val saveStateHandle = mock<SavedStateHandle>()
+        val viewModel = RegisterViewModel(appDataManager, saveStateHandle)
         val observerRegister = mock<Observer<ResultState>>()
 
         val bodyRegister = BodyRegister(
@@ -70,6 +72,8 @@ class RegisterViewModelTest : Spek({
                     observerRegister,
                     atLeastOnce()
                 ).onChanged(ResultState.Success(expectedResult, ""))
+                verify(appDataManager).register(bodyRegister)
+                viewModel.resultStateResponseRegister.hasActiveObservers()
             }
         }
 
@@ -93,6 +97,7 @@ class RegisterViewModelTest : Spek({
                 viewModel.resultStateResponseRegister.test().assertValue {
                     it is ResultState.Error
                 }
+                viewModel.resultStateResponseRegister.hasActiveObservers()
             }
         }
 

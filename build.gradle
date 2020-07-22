@@ -143,19 +143,19 @@ ext {
             mockito: "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion",
     ]
     testDependencies = [
-            junit          : "junit:junit:${junitVersion}",
-            mockito        : "org.mockito:mockito-core:$mockitoVersion",
-            kotlinReflect  : "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-            testingKtx     : "com.jraska.livedata:testing-ktx:$testingKtxVersion",
-            archCoreTesting: "androidx.arch.core:core-testing:$archCoreTestingVersion",
+            junit        : "junit:junit:${junitVersion}",
+            mockito      : "org.mockito:mockito-core:$mockitoVersion",
+            kotlinReflect: "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+            testingKtx   : "com.jraska.livedata:testing-ktx:$testingKtxVersion",
 
     ]
     androidTestDependencies = [
-            expressoCore  : "androidx.test.espresso:espresso-core:$expressoCoreVersion",
-            testRunner    : "androidx.test:runner:$testRunnerVersion",
-            testRules     : "androidx.test:rules:$testRulesVersion",
-            extJunit      : "androidx.test.ext:junit:$extJunitVersion",
-            mockitoTesting: "org.mockito:mockito-android:$mockitoTestingAndroidVersion",
+            expressoCore   : "androidx.test.espresso:espresso-core:$expressoCoreVersion",
+            testRunner     : "androidx.test:runner:$testRunnerVersion",
+            testRules      : "androidx.test:rules:$testRulesVersion",
+            extJunit       : "androidx.test.ext:junit:$extJunitVersion",
+            mockitoTesting : "org.mockito:mockito-android:$mockitoTestingAndroidVersion",
+            archCoreTesting: "androidx.arch.core:core-testing:$archCoreTestingVersion",
     ]
     spekDependenciesTestImplementation = [
             spek2Dsl           : "org.spekframework.spek2:spek-dsl-jvm:${spekVersion}",
@@ -181,6 +181,16 @@ ext {
     uiAndroidx = [
             "fragmentKtx": "androidx.fragment:fragment-ktx:$fragmentKtx",
             "activityKtx": "androidx.activity:activity-ktx:$activityKtx"
+    ]
+
+    roomDependencies = [
+            room_rxjava : "androidx.room:room-rxjava2:2.2.5",
+            room_runtime: "androidx.room:room-runtime:2.2.5",
+            room_ktx    : "androidx.room:room-ktx:2.2.5"
+    ]
+
+    roomKaptDependencies = [
+            room_compiler: "androidx.room:room-compiler:2.2.5", // use kapt
     ]
 }
 

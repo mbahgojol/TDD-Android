@@ -55,6 +55,7 @@ dependencies {
     implementation okHttpDependencies.values()
     implementation daggerHiltDependencies.values()
     kapt daggerHiltKaptDependencies.values()
+    kapt roomKaptDependencies.values()
 
     implementation glideDependencies.values()
     annotationProcessor glideDependencies.values()
@@ -68,4 +69,5 @@ dependencies {
     testRuntimeOnly testRuntimeDependencies.values()
 
     implementation dialogUIDependencies.values()
+    implementation roomDependencies.values()
 }

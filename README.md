@@ -7,6 +7,7 @@ Example TDD (Test Drive Development) Android
 - MVVM + Clean Architecture
 - RxAndroid & RxJava
 - Retrofit
+- Room
 - Glide
 - Mockito
 - Spek Framework

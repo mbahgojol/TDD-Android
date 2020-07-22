@@ -1,6 +1,7 @@
 package com.blank.chapter10.ui.login
 
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.blank.chapter10.data.AppDataManager
 import com.blank.chapter10.data.model.BodyLogin
 import com.blank.chapter10.data.model.Data
@@ -29,7 +30,8 @@ import retrofit2.Response
 class LoginViewModelTest : Spek({
     Feature("Login") {
         val appDataManager = mock<AppDataManager>()
-        val viewModel = LoginViewModel(appDataManager)
+        val saveStateHandle = mock<SavedStateHandle>()
+        val viewModel = LoginViewModel(appDataManager, saveStateHandle)
         val observerLogin = mock<Observer<ResultState>>()
 
         val bodyLogin = BodyLogin(

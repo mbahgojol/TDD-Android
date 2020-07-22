@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.blank.chapter10.data.AppDataManager
+import com.blank.chapter10.data.local.db.entity.User
 import com.blank.chapter10.utils.api.ResultState
 import com.blank.chapter10.utils.api.getResultStateError
 import com.blank.teamb_ex.BodyRegister
@@ -18,6 +19,7 @@ class RegisterViewModel @ViewModelInject constructor(
     ViewModel() {
     private val compositeDisposable = CompositeDisposable()
     val resultStateResponseRegister = MutableLiveData<ResultState>()
+    val resultStateInserDb = MutableLiveData<ResultState>()
 
     fun register(bodyRegister: BodyRegister) {
         compositeDisposable.add(
@@ -29,6 +31,17 @@ class RegisterViewModel @ViewModelInject constructor(
                     resultStateResponseRegister.postValue(it)
                 }, {
                     resultStateResponseRegister.postValue(getResultStateError(it))
+                })
+        )
+    }
+
+    fun insertUser(user: User) {
+        compositeDisposable.add(
+            appDataManager.insertUser(user)
+                .subscribe({
+                    resultStateInserDb.postValue(ResultState.Success(it, ""))
+                }, {
+                    resultStateInserDb.postValue(ResultState.Error(it))
                 })
         )
     }

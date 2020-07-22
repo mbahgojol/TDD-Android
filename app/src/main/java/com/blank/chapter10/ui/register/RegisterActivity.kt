@@ -6,14 +6,17 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.blank.chapter10.R
+import com.blank.chapter10.data.local.db.entity.User
 import com.blank.chapter10.data.model.ResponseRegister
 import com.blank.chapter10.utils.ambilText
 import com.blank.chapter10.utils.api.ResultState
 import com.blank.chapter10.utils.observe
 import com.blank.teamb_ex.BodyRegister
+import dagger.hilt.android.AndroidEntryPoint
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_register.*
 
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
     private val viewModel: RegisterViewModel by viewModels()
 
@@ -26,6 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         observe(viewModel.resultStateResponseRegister, this::manageResponseRegister)
+        observe(viewModel.resultStateInserDb, this::manageResponseInsertDb)
 
         btnRegister.setOnClickListener {
             val username = etUsername.ambilText()
@@ -52,14 +56,29 @@ class RegisterActivity : AppCompatActivity() {
                     this@RegisterActivity,
                     state.throwable.message.toString(),
                     Toast.LENGTH_LONG
-                )
-                    .show()
+                ).show()
             }
 
             is ResultState.Success<*> -> {
-                hideLoading()
                 val data = state.data as ResponseRegister
-                Toast.makeText(this@RegisterActivity, data.toString(), Toast.LENGTH_LONG).show()
+                viewModel.insertUser(
+                    User(
+                        email = data.data?.email,
+                        username = data.data?.username
+                    )
+                )
+            }
+        }
+    }
+
+    private fun manageResponseInsertDb(state: ResultState) {
+        when (state) {
+            is ResultState.Success<*> -> {
+                hideLoading()
+                Toast.makeText(this@RegisterActivity, "Register Success!", Toast.LENGTH_LONG).show()
+            }
+            is ResultState.Error -> {
+
             }
         }
     }
