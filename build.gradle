@@ -68,7 +68,7 @@ ext {
     jUnitJupiterApiVersion = '5.5.0'
     pagingRuntime = '2.1.2'
     crashlyticsVersion = '17.0.0-beta04'
-    mockitoVersion = "3.0.0"
+    mockitoVersion = "3.4.0"
     testingKtxVersion = "1.1.2"
     archCoreTestingVersion = "2.1.0"
     expressoCoreVersion = "3.2.0"
