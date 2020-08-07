@@ -34,6 +34,9 @@ coverageTests:
   stage: test
   script:
     - ./gradlew -Pci --console=plain jacocoTestReport coveralls
+  artifacts:
+    paths:
+      - app/build/outputs/
 
 assembleDebug:
   stage: build
