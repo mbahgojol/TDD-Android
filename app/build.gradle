@@ -31,6 +31,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        signingConfigs {
+            ProductionRelease {
+                storeFile file("keystore_test.jks")
+                storePassword "123123"
+                keyAlias "keystore_test"
+                keyPassword "123123"
+            }
+        }
+    }
+
     buildTypes {
         debug {
             testCoverageEnabled true
@@ -40,6 +51,7 @@ android {
             testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.ProductionRelease
         }
     }
 
