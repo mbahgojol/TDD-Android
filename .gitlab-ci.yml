@@ -30,6 +30,11 @@ lintDebug:
   script:
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
+coverageTests:
+  stage: test
+  script:
+    - ./gradlew -Pci --console=plain jacocoTestReport coveralls
+
 assembleDebug:
   stage: build
   script:
