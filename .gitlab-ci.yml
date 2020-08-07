@@ -11,7 +11,7 @@ cache:
 stages:
   - build
   - test
-
+#build
 lintDebug:
   stage: build
   script:
@@ -25,7 +25,7 @@ assembleDebug:
     paths:
       - app/build/outputs/
 #release apk
-build:
+assembleRelease:
   stage: build
   script:
     - ./gradlew --stacktrace clean assembleRelease
