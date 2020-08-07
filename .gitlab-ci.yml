@@ -33,7 +33,7 @@ lintDebug:
 coverageTests:
   stage: test
   script:
-    - ./gradlew -Pci --console=plain jacocoTestReport coveralls
+    - ./gradlew -Pci --console=plain jacocoTestReport
   artifacts:
     paths:
       - app/build/outputs/

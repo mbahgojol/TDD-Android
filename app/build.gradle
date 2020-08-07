@@ -2,10 +2,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'jacoco'
+apply plugin: "com.hiya.jacoco-android"
 
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("$rootDir/jacocoReports")
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+
+}
 
 android {
     compileSdkVersion 29
@@ -23,10 +32,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+
         release {
+            testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 
     compileOptions {
@@ -36,6 +54,18 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+def exclusionList = [
+        '**/data/**',
+        '**/*AppLoader*',
+        '**/utils/**',
+        '**/ui/login/**',
+        '**/ui/register/**',
+]
+
+jacocoAndroidUnitTestReport {
+    excludes += exclusionList
 }
 
 dependencies {
@@ -71,28 +101,4 @@ dependencies {
 
     implementation dialogUIDependencies.values()
     implementation roomDependencies.values()
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class',
-                      '**/R$*.class',
-                      '**/BuildConfig.*',
-                      '**/Manifest*.*',
-                      '**/*Test*.*',
-                      'android/**/*.*',
-                      '**/data/models/*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([debugTree])
-    executionData.from = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
-    ])
 }
