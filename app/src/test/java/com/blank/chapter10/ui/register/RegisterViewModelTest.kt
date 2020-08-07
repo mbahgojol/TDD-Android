@@ -3,6 +3,7 @@ package com.blank.chapter10.ui.register
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.blank.chapter10.data.AppDataManager
+import com.blank.chapter10.data.local.db.entity.User
 import com.blank.chapter10.data.model.DataRegister
 import com.blank.chapter10.data.model.ResponseRegister
 import com.blank.chapter10.utils.api.BaseErrorDataSourceApi
@@ -16,8 +17,10 @@ import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
 import org.mockito.Mockito
@@ -74,6 +77,11 @@ class RegisterViewModelTest : Spek({
                 ).onChanged(ResultState.Success(expectedResult, ""))
                 verify(appDataManager).register(bodyRegister)
                 viewModel.resultStateResponseRegister.hasActiveObservers()
+
+                val ex = appDataManager.register(bodyRegister)
+                    .blockingGet()
+                Assert.assertNotNull(ex)
+                
             }
         }
 
@@ -98,6 +106,24 @@ class RegisterViewModelTest : Spek({
                     it is ResultState.Error
                 }
                 viewModel.resultStateResponseRegister.hasActiveObservers()
+            }
+        }
+
+        Scenario("do on insert to db room, response any value") {
+            Given("set values") {
+                given(appDataManager.insertUser(User())).willReturn(Observable.just(true))
+            }
+
+            When("request dao ") {
+                viewModel.insertUser(User())
+            }
+
+            Then("result true and get values") {
+                verify(appDataManager).insertUser(User())
+                viewModel.resultStateInserDb.test().assertHasValue()
+                viewModel.resultStateInserDb.test().assertValue {
+                    it is ResultState.Success<*>
+                }
             }
         }
 
